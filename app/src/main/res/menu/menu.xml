@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/scanner">
+            <menu>
+                <item android:id="@+id/scanner"
+                    android:icon="@drawable/baseline_camera_24"
+                    android:title="@string/bar_qr_code"/>
+            </menu>
+        </item>
+        <item
+            android:icon="@drawable/baseline_camera_alt_24"
+            android:title="@string/generator">
+            <menu>
+                <item android:id="@+id/bar_generator"
+                    android:icon="@drawable/baseline_view_week_24"
+                    android:title="@string/bar_code"/>
+                <item android:id="@+id/qr_generator"
+                    android:icon="@drawable/baseline_satellite_24"
+                    android:title="@string/qr_code"/>
+            </menu>
+        </item>
+        <item android:id="@+id/settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/settings"/>
+    </group>
+</menu>

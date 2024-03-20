@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">CodeScanner</string>
+    <string name="settings">SETTINGS</string>
+    <string name="qr_code">QR code</string>
+    <string name="bar_code">Bar code</string>
+    <string name="generator">GENERATOR</string>
+    <string name="bar_qr_code">Bar/QR code</string>
+    <string name="scanner">SCANNER</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="generate">Generate</string>
+    <string name="scan">Scan</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="change_mode">Change mode</string>
+    <string name="mode">Mode:</string>
+    <string name="generated_codes_dimensions">Generated codes dimensions</string>
+    <string name="width">Width:</string>
+    <string name="height">Height:</string>
+    <string name="_1024_px">1024 px</string>
+    <string name="generated_codes_path">Generated codes path</string>
+    <string name="file_path">File path:</string>
+
+</resources>
