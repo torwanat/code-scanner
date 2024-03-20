@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mainBackground"
     android:orientation="vertical"
     tools:context=".SettingsFragment">
 
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/settings"
+        android:textColor="@color/mainText"
         android:textSize="48sp" />
 
     <View
@@ -25,6 +27,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/change_mode"
+        android:textColor="@color/mainText"
         android:textSize="24sp" />
 
     <View
@@ -38,16 +41,26 @@
 
         <TextView
             android:id="@+id/tvMode"
-            android:layout_width="200dp"
+            android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="end|center_vertical"
-            android:text="@string/mode" />
+            android:text="@string/mode"
+            android:textColor="@color/mainText" />
 
         <Spinner
             android:id="@+id/spMode"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:entries="@array/mode_options"
+            android:textColor="@color/mainText" />
+
+        <View
+            android:id="@+id/divider13"
+            android:layout_width="80dp"
+            android:layout_height="match_parent" />
+
+
     </LinearLayout>
 
     <View
@@ -61,6 +74,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/generated_codes_dimensions"
+        android:textColor="@color/mainText"
         android:textSize="24sp" />
 
     <View
@@ -77,7 +91,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
-            android:text="@string/width" />
+            android:text="@string/width"
+            android:textColor="@color/mainText" />
 
         <SeekBar
             android:id="@+id/sbWidth"
@@ -90,7 +105,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="start|center_vertical"
-            android:text="@string/_1024_px" />
+            android:text="@string/_1024_px"
+            android:textColor="@color/mainText" />
 
     </LinearLayout>
 
@@ -108,7 +124,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
-            android:text="@string/height" />
+            android:text="@string/height"
+            android:textColor="@color/mainText" />
 
         <SeekBar
             android:id="@+id/sbHeight"
@@ -121,7 +138,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="start|center_vertical"
-            android:text="@string/_1024_px" />
+            android:text="@string/_1024_px"
+            android:textColor="@color/mainText" />
 
     </LinearLayout>
 
@@ -136,6 +154,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/generated_codes_path"
+        android:textColor="@color/mainText"
         android:textSize="24sp" />
 
     <View
@@ -152,7 +171,8 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
-            android:text="@string/file_path" />
+            android:text="@string/file_path"
+            android:textColor="@color/mainText" />
 
         <EditText
             android:id="@+id/etFilePath"
@@ -161,6 +181,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="text"
+            android:textColor="@color/mainText"
             android:textSize="14sp" />
 
     </LinearLayout>

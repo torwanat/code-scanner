@@ -1,12 +1,20 @@
 package com.example.codescanner;
 
+import static androidx.core.content.ContextCompat.getColor;
+
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +67,40 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        Spinner spMode = view.findViewById(R.id.spMode);
+        spMode.setTag("First");
+        spMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                for (int i = 0; i < parent.getChildCount(); i++) {
+                    ((TextView) parent.getChildAt(i)).setTextColor(getColor(requireContext(),R.color.mainText));
+                }
+
+                if(spMode.getTag().equals("First")){
+                    spMode.setTag("Not first");
+                    return;
+                }
+
+                String mode = spMode.getSelectedItem().toString();
+                switch (mode){
+                    case "Light":
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        break;
+                    case "Dark":
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        break;
+                    default:
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        return view;
     }
 }

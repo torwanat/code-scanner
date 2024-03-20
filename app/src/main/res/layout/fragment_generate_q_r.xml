@@ -9,17 +9,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white">
+        android:background="@color/mainBackground"
+        android:orientation="vertical">
 
         <EditText
             android:id="@+id/etText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/mainBackground"
             android:ems="10"
             android:inputType="textPersonName"
             android:textAlignment="center"
-            android:textColor="@color/black" />
+            android:textColor="@color/mainText" />
 
         <View
             android:id="@+id/divider"
@@ -31,7 +32,9 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/generate" />
+            android:background="@color/colorPrimary"
+            android:text="@string/generate"
+            android:textColor="@color/mainText" />
 
         <View
             android:id="@+id/divider2"

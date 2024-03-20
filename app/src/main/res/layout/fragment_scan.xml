@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mainBackground"
     android:orientation="vertical"
     tools:context=".ScanFragment">
 
@@ -17,7 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/scan" />
+        android:background="@color/colorPrimary"
+        android:text="@string/scan"
+        android:textColor="@color/mainText" />
 
     <View
         android:id="@+id/divider4"
@@ -28,7 +31,9 @@
         android:id="@+id/tvResult"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:textAlignment="center" />
+        android:background="@color/mainBackground"
+        android:textAlignment="center"
+        android:textColor="@color/mainText" />
 
     <View
         android:id="@+id/divider5"
@@ -40,5 +45,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/copy_to_clipboard" />
+        android:background="@color/colorPrimary"
+        android:text="@string/copy_to_clipboard"
+        android:textColor="@color/mainText" />
 </LinearLayout>
