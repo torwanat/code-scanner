@@ -21,5 +21,6 @@
     <string name="_1024_px">1024 px</string>
     <string name="generated_codes_path">Generated codes path</string>
     <string name="file_path">File path:</string>
+    <string name="choose_file_path">Choose file path</string>
 
 </resources>

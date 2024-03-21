@@ -2,21 +2,24 @@ package com.example.codescanner;
 
 import static androidx.core.content.ContextCompat.getColor;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
+
 import java.text.MessageFormat;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +32,8 @@ public class SettingsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private TextView tvFilePath;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,6 +70,17 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    private final ActivityResultLauncher<Uri> mDirRequest = registerForActivityResult(
+            new ActivityResultContracts.OpenDocumentTree(),
+            uri -> {
+                requireContext().getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                tvFilePath.setText(uri.toString());
+                Bundle bundle = new Bundle();
+                bundle.putString("FILEPATH", uri.toString());
+                getParentFragmentManager().setFragmentResult("FILEPATH_CHANGED", bundle);
+            }
+    );
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,28 +92,26 @@ public class SettingsFragment extends Fragment {
         TextView tvWidthPixels = view.findViewById(R.id.tvWidthPixels);
         TextView tvHeightPixels = view.findViewById(R.id.tvHeightPixels);
         Spinner spMode = view.findViewById(R.id.spMode);
+        Button btFilePath = view.findViewById(R.id.btFilePath);
+        tvFilePath = view.findViewById(R.id.tvFilePath);
 
         assert getArguments() != null;
         int previousModePosition = getArguments().getInt("MODE_POSITION", 0);
-        spMode.setSelection(previousModePosition);
         int codeWidth = getArguments().getInt("CODE_WIDTH");
         int codeHeight = getArguments().getInt("CODE_HEIGHT");
+        String filepath = getArguments().getString("FILEPATH");
+        spMode.setSelection(previousModePosition);
         sbWidth.setProgress(codeWidth);
         sbHeight.setProgress(codeHeight);
         tvWidthPixels.setText(MessageFormat.format("{0} px", codeWidth));
         tvHeightPixels.setText(MessageFormat.format("{0} px", codeHeight));
+        tvFilePath.setText(filepath);
 
-        spMode.setTag("First");
         spMode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 for (int i = 0; i < parent.getChildCount(); i++) {
                     ((TextView) parent.getChildAt(i)).setTextColor(getColor(requireContext(),R.color.mainText));
-                }
-
-                if(spMode.getTag().equals("First")){
-                    spMode.setTag("Not first");
-                    return;
                 }
 
                 String mode = spMode.getSelectedItem().toString();
@@ -163,6 +177,13 @@ public class SettingsFragment extends Fragment {
                 bundle.putInt("CODE_HEIGHT", seekBar.getProgress());
                 bundle.putInt("CODE_WIDTH", -1);
                 getParentFragmentManager().setFragmentResult("CODE_DIMENSIONS_CHANGED", bundle);
+            }
+        });
+
+        btFilePath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDirRequest.launch(null);
             }
         });
         return view;

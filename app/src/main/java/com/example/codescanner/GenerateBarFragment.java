@@ -5,38 +5,33 @@ import static android.os.Build.VERSION.SDK_INT;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +56,7 @@ public class GenerateBarFragment extends Fragment {
     private ImageView ivCode;
     private EditText etText;
     private Bitmap barCode;
+    private String filepath = "";
 
     public GenerateBarFragment() {
         // Required empty public constructor
@@ -140,7 +136,7 @@ public class GenerateBarFragment extends Fragment {
         return null;
     }
 
-    public Uri saveBitmap(@NonNull final Bitmap bitmap) throws IOException {
+    public void saveBitmap(@NonNull final Bitmap bitmap) throws IOException {
         final ContentValues values = new ContentValues();
         values.put(MediaStore.MediaColumns.DISPLAY_NAME, "IMG_" + System.currentTimeMillis());
         values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
@@ -149,31 +145,47 @@ public class GenerateBarFragment extends Fragment {
         }
         final ContentResolver resolver = requireContext().getContentResolver();
         Uri uri = null;
-        try {
-            final Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            uri = resolver.insert(contentUri, values);
-            if (uri == null) {
-                //isSuccess = false;
-                throw new IOException("Failed to create new MediaStore record.");
-            }
-            try (final OutputStream stream = resolver.openOutputStream(uri)) {
-                if (stream == null) {
+        if(filepath.equals("")){
+            try {
+                Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                uri = resolver.insert(contentUri, values);
+                if (uri == null) {
                     //isSuccess = false;
-                    throw new IOException("Failed to open output stream.");
+                    throw new IOException("Failed to create new MediaStore record.");
                 }
-                if (!bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)) {
-                    //isSuccess = false;
-                    throw new IOException("Failed to save bitmap.");
+                try (final OutputStream stream = resolver.openOutputStream(uri)) {
+                    if (stream == null) {
+                        //isSuccess = false;
+                        throw new IOException("Failed to open output stream.");
+                    }
+                    if (!bitmap.compress(Bitmap.CompressFormat.PNG, 95, stream)) {
+                        //isSuccess = false;
+                        throw new IOException("Failed to save bitmap.");
+                    }
                 }
+                //isSuccess = true;
+            } catch (IOException e) {
+                if (uri != null) {
+                    resolver.delete(uri, null, null);
+                }
+                throw e;
             }
-            //isSuccess = true;
-            return uri;
-        } catch (IOException e) {
-            if (uri != null) {
-                resolver.delete(uri, null, null);
+        }else{
+            String actualPath = filepath.replace("content://com.android.externalstorage.documents/tree/primary%3A", "");
+            actualPath = actualPath.replaceAll("%2F", String.valueOf(File.separatorChar));
+            String destinationFilename = actualPath + File.separatorChar+ "IMG_" + System.currentTimeMillis() + ".png";
+
+            try {
+                File out = new File(Environment.getExternalStorageDirectory(), destinationFilename);
+                OutputStream outputStream = Files.newOutputStream(out.toPath());
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            throw e;
         }
+
     }
 
     @Override
@@ -184,12 +196,17 @@ public class GenerateBarFragment extends Fragment {
         Button btGenerate = view.findViewById(R.id.btGenerate);
         etText = view.findViewById(R.id.etText);
         ivCode = view.findViewById(R.id.ivCode);
+
+        assert getArguments() != null;
+        int imageWidth = getArguments().getInt("CODE_WIDTH", 1024);
+        int imageHeight = getArguments().getInt("CODE_HEIGHT", 1024);
+        filepath = getArguments().getString("FILEPATH", "");
         btGenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!etText.getText().toString().equals("")){
                     try {
-                        barCode = encodeAsBitmap(etText.getText().toString(), BarcodeFormat.CODE_128, 600, 300);
+                        barCode = encodeAsBitmap(etText.getText().toString(), BarcodeFormat.CODE_128, imageWidth, imageHeight);
                         ivCode.setImageBitmap(barCode);
                     } catch (WriterException e) {
                         throw new RuntimeException(e);

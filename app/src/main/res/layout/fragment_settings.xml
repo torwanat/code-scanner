@@ -166,28 +166,24 @@
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/btFilePath"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/choose_file_path"
+        android:textColor="@color/mainText" />
 
-        <TextView
-            android:id="@+id/tvPath"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|end"
-            android:text="@string/file_path"
-            android:textColor="@color/mainText" />
+    <View
+        android:id="@+id/divider14"
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
 
-        <EditText
-            android:id="@+id/etFilePath"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="text"
-            android:textColor="@color/mainText"
-            android:textSize="14sp" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tvFilePath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/mainText" />
 
 </LinearLayout>

@@ -1,20 +1,22 @@
 package com.example.codescanner;
 
+import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.WindowManager;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.annotation.SuppressLint;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.Toast;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -22,12 +24,27 @@ public class MainActivity extends AppCompatActivity {
     private int modePosition = 0;
     private int codeWidth = 1024;
     private int codeHeight = 1024;
+    private String filepath = "";
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        modePosition = prefs.getInt("MODE_POSITION", 0);
+        codeWidth = prefs.getInt("CODE_WIDTH", 1024);
+        codeHeight = prefs.getInt("CODE_HEIGHT", 1024);
+        filepath = prefs.getString("FILEPATH", "");
+
+        if(modePosition != 0){
+            if(modePosition == 1){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        }
         getSupportFragmentManager().setFragmentResultListener("MODE_POSITION_CHANGED", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
@@ -39,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 if (result.getInt("CODE_WIDTH") != -1) codeWidth = result.getInt("CODE_WIDTH");
                 if (result.getInt("CODE_HEIGHT") != -1) codeHeight = result.getInt("CODE_HEIGHT");
+            }
+        });
+        getSupportFragmentManager().setFragmentResultListener("FILEPATH_CHANGED", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                filepath = result.getString("FILEPATH");
             }
         });
 
@@ -76,11 +99,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editPrefs = prefs.edit();
+        editPrefs.putInt("MODE_POSITION", modePosition);
+        editPrefs.putInt("CODE_WIDTH", codeWidth);
+        editPrefs.putInt("CODE_HEIGHT", codeHeight);
+        editPrefs.putString("FILEPATH", filepath);
+        editPrefs.apply();
+    }
+
     private void fragmentR(Fragment fragment){
         Bundle bundle = new Bundle();
         bundle.putInt("MODE_POSITION", modePosition);
         bundle.putInt("CODE_WIDTH", codeWidth);
         bundle.putInt("CODE_HEIGHT", codeHeight);
+        bundle.putString("FILEPATH", filepath);
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
